@@ -1,5 +1,5 @@
 {
-  "name": "ng2-semantic-ui",
+  "name": "@giomamaladze/ng2-semantic-ui",
   "main": "bundles/ng2-semantic-ui.umd.min.js",
   "module": "dist/public.js",
   "typings": "dist/public.d.ts",
@@ -7,10 +7,10 @@
   "description": "Angular 2 Semantic UI Components",
   "repository": {
     "type": "git",
-    "url": "https://github.com/edcarroll/ng2-semantic-ui/tree/master"
+    "url": "git+ssh://git@github.com:Belouccio/ng2-semantic-ui/tree/master"
   },
   "bugs": {
-    "url": "https://github.com/edcarroll/ng2-semantic-ui/tree/master/issues"
+    "url": "git+ssh://git@github.com:Belouccio/ng2-semantic-ui/tree/master/issues"
   },
   "author": "Edward Carroll",
   "keywords": [
@@ -58,7 +58,7 @@
     "rxjs": "^5.0.1"
   },
   "devDependencies": {
-    "@angular/cli": "^1.7.3",
+    "@angular/cli": "^1.7.4",
     "@angular/common": "^5.2.9",
     "@angular/compiler": "^5.2.9",
     "@angular/compiler-cli": "^5.2.9",

@@ -2,7 +2,7 @@ import {
     Component, Input, OnInit, ViewChild, ElementRef, Renderer2,
     EventEmitter, Output, HostListener, ViewContainerRef, AfterViewInit
 } from "@angular/core";
-import { Util, IDynamicClasses, KeyCode, SuiComponentFactory } from "../../../misc/util/index";
+import { Util, KeyCode, SuiComponentFactory } from "../../../misc/util/index";
 import { TransitionController, Transition, TransitionDirection } from "../../transition/index";
 import { ModalControls, ModalResult } from "../classes/modal-controls";
 import { ModalConfig, ModalSize } from "../classes/modal-config";
@@ -161,12 +161,8 @@ export class SuiModal<T, U> implements OnInit, AfterViewInit {
     // Parent element of modal before relocation to document body.
     private _originalContainer?:Element;
 
-    public get dynamicClasses():IDynamicClasses {
-        const classes:IDynamicClasses = {};
-        if (this.size) {
-            classes[this.size] = true;
-        }
-        return classes;
+    public get dynamicClasses():string {
+        return this.size || "";
     }
 
     constructor(private _renderer:Renderer2, private _element:ElementRef, private _componentFactory:SuiComponentFactory) {
