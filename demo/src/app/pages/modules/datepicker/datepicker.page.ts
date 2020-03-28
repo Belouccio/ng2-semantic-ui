@@ -11,6 +11,7 @@ const exampleStandardTemplate = `
             <input suiDatepicker
                    [(ngModel)]="date"
                    [pickerMode]="mode"
+                   
                    [pickerFirstDayOfWeek]="firstDayOfWeek"
                    [pickerUseNativeOnMobile]="false">
         </div>
@@ -186,6 +187,7 @@ export class DatepickerPage {
 })
 export class DatepickerExampleStandard {
     public firstDayOfWeek:number = 1;
+    public pickerInitialDate:Date = new Date('December 17, 1995 03:24:00');;
 
     public datepickerModes:string[] = ["datetime", "date", "time", "month", "year"];
     public mode:DatepickerMode = DatepickerMode.Datetime;

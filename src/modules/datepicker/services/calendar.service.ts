@@ -28,6 +28,7 @@ export class CalendarService {
     }
 
     public currentDate:Date;
+    public initialDate:Date | undefined;
     private _selectedDate?:Date;
 
     public get selectedDate():Date | undefined {

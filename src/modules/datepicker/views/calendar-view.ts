@@ -32,6 +32,14 @@ export abstract class CalendarView implements AfterViewInit, OnDestroy {
             delete this._highlightedItem;
             this.autoHighlight();
         };
+
+        // Если передана дата по дефолту, то подсвечиваем
+        if ( this._service.initialDate && !this.selectedDate ) {
+            let initiallyHighlighted = this.ranges.current.items.find(i => this.ranges.dateComparer.equal(i.date, this._service.initialDate ));
+            if ( initiallyHighlighted ) {
+                initiallyHighlighted.isActive = true;
+            }
+        }
     }
 
     public get service():CalendarService {

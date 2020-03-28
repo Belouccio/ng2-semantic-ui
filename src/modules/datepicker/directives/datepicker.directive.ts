@@ -134,6 +134,7 @@ export class SuiDatepickerDirective
             this.componentInstance.service.config = this.config;
             this.componentInstance.service.localeValues = this.localeValues;
             this.componentInstance.service.currentDate = this.initialDate || new Date();
+            this.componentInstance.service.initialDate = this.initialDate;
             this.componentInstance.service.selectedDate = this.selectedDate;
             this.componentInstance.service.maxDate = this.maxDate;
             this.componentInstance.service.minDate = this.minDate;
