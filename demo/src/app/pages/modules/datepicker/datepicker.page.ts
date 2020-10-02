@@ -86,7 +86,9 @@ const exampleDatepickerNextTemplate = `
             <i class="calendar icon"></i>
             <input suiDatepickerNext
                    [(ngModel)]="date"
+                   (pickerSelectedDateChange)="onChangeDate=$event"
                    [pickerMode]="mode"
+                   [pickerOnlyEmitManual]="true"
                    [pickerFirstDayOfWeek]="firstDayOfWeek"
                    [pickerUseNativeOnMobile]="false">
         </div>
@@ -101,7 +103,11 @@ const exampleDatepickerNextTemplate = `
         <label>First Day of the Week</label>
         <input type="number" [(ngModel)]="firstDayOfWeek" min="0" max="6">
     </div>
+    <button class="ui secondary button" (click)="setProgrammicallyDate()">
+      Set programically
+    </button>
     <p>Selected Date: {{ date }}</p>
+    <p>Event Date: {{ onChangeDate }}</p>
 </div>
 `;
 
@@ -228,8 +234,15 @@ export class DatepickerNextExampleStandard {
     public firstDayOfWeek:number = 1;
 
     public datepickerModes:string[] = ["datetime", "date", "time", "month", "year"];
-    public mode:DatepickerMode = DatepickerMode.Datetime;
+    public mode:DatepickerMode = DatepickerMode.Date;
     public date:Date;
+
+    public onChangeDate:Date;
+
+    public setProgrammicallyDate():void {
+        const newDate = new Date(+(new Date()) - Math.floor(Math.random() * 10000000000));
+        this.date = newDate;
+    }
 }
 
 @Component({

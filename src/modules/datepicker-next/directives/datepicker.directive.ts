@@ -26,11 +26,6 @@ export class SuiDatepickerNextDirective
         return this._selectedDate;
     }
 
-    public set selectedDate(date:Date | undefined) {
-        this._selectedDate = date;
-        this.onSelectedDateChange.emit(date);
-    }
-
     private _mode:DatepickerMode;
     public config:CalendarConfig;
 
@@ -59,7 +54,7 @@ export class SuiDatepickerNextDirective
                 this.config = new TimeConfig();
                 break;
         }
-        this.writeValue(this.selectedDate);
+        this.setSelectedDate(this.selectedDate);
     }
 
     @Input("pickerInitialDate")
@@ -70,6 +65,9 @@ export class SuiDatepickerNextDirective
 
     @Input("pickerMinDate")
     public minDate?:Date;
+
+    @Input("pickerOnlyEmitManual")
+    public onlyEmitManual?:boolean;
 
     @Input("pickerFirstDayOfWeek")
     public firstDayOfWeek?:number;
@@ -101,6 +99,8 @@ export class SuiDatepickerNextDirective
     @Output("pickerSelectedDateChange")
     public onSelectedDateChange:EventEmitter<Date>;
 
+    public onDateChange:EventEmitter<Date>;
+
     @Output("pickerValidatorChange")
     public onValidatorChange:EventEmitter<void>;
 
@@ -125,6 +125,7 @@ export class SuiDatepickerNextDirective
         this.localizationService.onLanguageUpdate.subscribe(() => this.onLocaleUpdate());
 
         this.onSelectedDateChange = new EventEmitter<Date>();
+        this.onDateChange = new EventEmitter<Date>();
         this.onValidatorChange = new EventEmitter<void>();
 
         this.mode = DatepickerMode.Datetime;
@@ -146,7 +147,7 @@ export class SuiDatepickerNextDirective
             this.componentInstance.service.reset();
 
             this.componentInstance.service.onDateChange.subscribe((d:Date) => {
-                this.selectedDate = d;
+                this.setSelectedDate(d);
                 this.close();
             });
         }
@@ -181,8 +182,16 @@ export class SuiDatepickerNextDirective
         return null;
     }
 
+    public setSelectedDate(value:Date | undefined, emitValue:boolean = true):void {
+        this._selectedDate = value;
+        this.onDateChange.emit(value);
+        if (emitValue) {
+            this.onSelectedDateChange.emit(value);
+        }
+    }
+
     public writeValue(value:Date | undefined):void {
-        this.selectedDate = value;
+        this.setSelectedDate(value, !this.onlyEmitManual);
 
         if (this.componentInstance) {
             this.componentInstance.service.selectedDate = value;
