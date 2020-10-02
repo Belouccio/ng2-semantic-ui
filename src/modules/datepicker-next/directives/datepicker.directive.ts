@@ -9,15 +9,15 @@ import {
 } from "../../../misc/util/internal";
 import { IDatepickerLocaleValues, RecursivePartial, SuiLocalizationService } from "../../../behaviors/localization/internal";
 import { SuiPopupComponentController, PopupAfterOpen, PopupConfig, PopupTrigger } from "../../popup/internal";
-import { SuiDatepicker, DatepickerMode } from "../components/datepicker";
+import { SuiDatepickerNext, DatepickerMode } from "../components/datepicker";
 import { CalendarConfig, YearConfig, MonthConfig, DatetimeConfig, TimeConfig, DateConfig } from "../classes/calendar-config";
 
 @Directive({
-    selector: "[suiDatepicker]",
-    providers: [customValidatorFactory(SuiDatepickerDirective)]
+    selector: "[suiDatepickerNext]",
+    providers: [customValidatorFactory(SuiDatepickerNextDirective)]
 })
-export class SuiDatepickerDirective
-       extends SuiPopupComponentController<SuiDatepicker>
+export class SuiDatepickerNextDirective
+       extends SuiPopupComponentController<SuiDatepickerNext>
        implements ICustomValueAccessorHost<Date>, ICustomValidatorHost, OnChanges, PopupAfterOpen {
 
     private _selectedDate?:Date;
@@ -110,7 +110,7 @@ export class SuiDatepickerDirective
                 public localizationService:SuiLocalizationService,
                 zone:NgZone) {
 
-        super(renderer, element, componentFactory, SuiDatepicker, new PopupConfig({
+        super(renderer, element, componentFactory, SuiDatepickerNext, new PopupConfig({
             trigger: PopupTrigger.Focus,
             placement: PositioningPlacement.BottomLeft,
             transition: "scale",
@@ -198,19 +198,19 @@ export class SuiDatepickerDirective
 }
 
 @Directive({
-    selector: "[suiDatepicker]",
+    selector: "[suiDatepickerNext]",
     host: { "(pickerSelectedDateChange)": "onChange($event)" },
-    providers: [customValueAccessorFactory(SuiDatepickerDirectiveValueAccessor)]
+    providers: [customValueAccessorFactory(SuiDatepickerNextDirectiveValueAccessor)]
 })
-export class SuiDatepickerDirectiveValueAccessor extends CustomValueAccessor<Date, SuiDatepickerDirective> {
-    constructor(public host:SuiDatepickerDirective) { super(host); }
+export class SuiDatepickerNextDirectiveValueAccessor extends CustomValueAccessor<Date, SuiDatepickerNextDirective> {
+    constructor(public host:SuiDatepickerNextDirective) { super(host); }
 }
 
 @Directive({
-    selector: "[suiDatepicker]",
+    selector: "[suiDatepickerNext]",
     host: { "(pickerValidatorChange)": "onValidatorChange()" },
-    providers: [customValidatorFactory(SuiDatepickerDirectiveValidator)]
+    providers: [customValidatorFactory(SuiDatepickerNextDirectiveValidator)]
 })
-export class SuiDatepickerDirectiveValidator extends CustomValidator<SuiDatepickerDirective> {
-    constructor(public host:SuiDatepickerDirective) { super(host); }
+export class SuiDatepickerNextDirectiveValidator extends CustomValidator<SuiDatepickerNextDirective> {
+    constructor(public host:SuiDatepickerNextDirective) { super(host); }
 }

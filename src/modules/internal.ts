@@ -2,6 +2,7 @@ export * from "./accordion/internal";
 export * from "./checkbox/internal";
 export * from "./collapse/internal";
 export * from "./datepicker/internal";
+export * from "./datepicker-next/internal";
 export * from "./dimmer/internal";
 export * from "./dropdown/internal";
 export * from "./modal/internal";

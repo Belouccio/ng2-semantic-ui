@@ -78,6 +78,33 @@ const exampleMobileFallbackTemplate = `
 </div>
 `;
 
+const exampleDatepickerNextTemplate = `
+<div class="ui form">
+    <div class="field">
+        <label>Date</label>
+        <div class="ui left icon input">
+            <i class="calendar icon"></i>
+            <input suiDatepickerNext
+                   [(ngModel)]="date"
+                   [pickerMode]="mode"
+                   [pickerFirstDayOfWeek]="firstDayOfWeek"
+                   [pickerUseNativeOnMobile]="false">
+        </div>
+    </div>
+    <div class="field">
+        <label>Datepicker Mode</label>
+        <sui-select class="selection" [(ngModel)]="mode" [options]="datepickerModes" #modes>
+            <sui-select-option *ngFor="let m of modes.availableOptions" [value]="m"></sui-select-option>
+        </sui-select>
+    </div>
+    <div class="field">
+        <label>First Day of the Week</label>
+        <input type="number" [(ngModel)]="firstDayOfWeek" min="0" max="6">
+    </div>
+    <p>Selected Date: {{ date }}</p>
+</div>
+`;
+
 @Component({
     selector: "demo-page-datepicker",
     templateUrl: "./datepicker.page.html"
@@ -175,6 +202,7 @@ export class DatepickerPage {
     public exampleButtonTemplate:string = exampleButtonTemplate;
     public exampleMinMaxTemplate:string = exampleMinMaxTemplate;
     public exampleMobileFallbackTemplate:string = exampleMobileFallbackTemplate;
+    public exampleDatepickerNextTemplate:string = exampleDatepickerNextTemplate;
 
     public cssInclude:string =
 `<link rel="stylesheet" href="https://unpkg.com/semantic-ui-calendar/dist/calendar.min.css">`;
@@ -185,6 +213,18 @@ export class DatepickerPage {
     template: exampleStandardTemplate
 })
 export class DatepickerExampleStandard {
+    public firstDayOfWeek:number = 1;
+
+    public datepickerModes:string[] = ["datetime", "date", "time", "month", "year"];
+    public mode:DatepickerMode = DatepickerMode.Datetime;
+    public date:Date;
+}
+
+@Component({
+    selector: "example-datepicker-next-standard",
+    template: exampleDatepickerNextTemplate
+})
+export class DatepickerNextExampleStandard {
     public firstDayOfWeek:number = 1;
 
     public datepickerModes:string[] = ["datetime", "date", "time", "month", "year"];
@@ -236,5 +276,6 @@ export const DatepickerPageComponents = [
     DatepickerExampleStandard,
     DatepickerExampleButton,
     DatepickerExampleMinMax,
-    DatepickerExampleMobileFallback
+    DatepickerExampleMobileFallback,
+    DatepickerNextExampleStandard
 ];

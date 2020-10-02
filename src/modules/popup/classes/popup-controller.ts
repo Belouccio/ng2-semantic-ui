@@ -1,4 +1,4 @@
-import { ComponentRef, ElementRef, HostListener, OnDestroy, Renderer2 } from "@angular/core";
+import { ComponentRef, ElementRef, HostListener, NgZone, OnDestroy, Renderer2 } from "@angular/core";
 import { SuiComponentFactory } from "../../../misc/util/internal";
 import { PopupConfig, PopupTrigger, IPopupConfig } from "./popup-config";
 import { SuiPopup } from "../components/popup";
@@ -29,7 +29,8 @@ export abstract class SuiPopupController implements IPopup, OnDestroy {
     constructor(protected _renderer:Renderer2,
                 protected _element:ElementRef,
                 protected _componentFactory:SuiComponentFactory,
-                config:PopupConfig) {
+                config:PopupConfig,
+                protected _zone:NgZone) {
 
         // Generate a new SuiPopup component and attach it to the application view.
         this._componentRef = this._componentFactory.createComponent(SuiPopup);
@@ -58,24 +59,21 @@ export abstract class SuiPopupController implements IPopup, OnDestroy {
     public open():void {
         // Attach the generated component to the current application.
         this._componentFactory.attachToApplication(this._componentRef);
-
         if (this.popup.config.isInline) {
             this._componentFactory.moveToElement(this._componentRef, this._element.nativeElement.parentElement);
         } else {
-            // Move the generated element to the body to avoid any positioning issues.
+        // Move the generated element to the body to avoid any positioning issues.
             this._componentFactory.moveToDocumentBody(this._componentRef);
         }
-
         // Attach a reference to the anchor element. We do it here because IE11 loves to complain.
         this.popup.anchor = this._element;
-
         // Add a listener to the document body to handle closing.
         this._documentListener = this._renderer
-            .listen("document", "click", (e:MouseEvent) =>
-                this.onDocumentClick(e));
+        .listen("document", "click", (e:MouseEvent) =>
+            this.onDocumentClick(e));
 
         // Start popup open transition.
-        this.popup.open();
+        this.popup.open(this._componentRef.location.nativeElement.children[0]);
 
         // Call lifecyle hook
         const lifecycle = (this as IPopupLifecycle).popupOnOpen;
