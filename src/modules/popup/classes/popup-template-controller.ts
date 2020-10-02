@@ -1,4 +1,4 @@
-import { TemplateRef, Renderer2, ElementRef } from "@angular/core";
+import { TemplateRef, Renderer2, ElementRef, NgZone } from "@angular/core";
 import { SuiPopupController, IPopup } from "./popup-controller";
 import { ITemplateRefContext, SuiComponentFactory, IImplicitContext } from "../../../misc/util/internal";
 import { PopupConfig, IPopupConfig } from "./popup-config";
@@ -26,9 +26,10 @@ export class SuiPopupTemplateController<T> extends SuiPopupController {
     constructor(renderer:Renderer2,
                 element:ElementRef,
                 componentFactory:SuiComponentFactory,
-                config:PopupConfig) {
+                config:PopupConfig,
+                zone:NgZone) {
 
-        super(renderer, element, componentFactory, config);
+        super(renderer, element, componentFactory, config, zone);
     }
 
     public configure(config?:ITemplatePopupConfig<T>):void {

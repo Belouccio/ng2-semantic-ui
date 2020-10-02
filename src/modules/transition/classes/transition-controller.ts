@@ -4,7 +4,7 @@ import { Transition, TransitionDirection } from "./transition";
 export class TransitionController {
     private _renderer:Renderer2;
 
-    private _element:ElementRef;
+    public _element:ElementRef;
 
     private _changeDetector:ChangeDetectorRef;
 

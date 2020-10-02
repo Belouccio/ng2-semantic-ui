@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewContainerRef, ElementRef, EventEmitter, HostListener, HostBinding } from "@angular/core";
+import { Component, ViewChild, ViewContainerRef, ElementRef, EventEmitter, HostListener, HostBinding, NgZone, Renderer2, ChangeDetectorRef } from "@angular/core";
 import { PositioningService, IDynamicClasses } from "../../../misc/util/internal";
 import { TransitionController, TransitionDirection, Transition } from "../../transition/internal";
 import { IPopup } from "../classes/popup-controller";
@@ -133,7 +133,11 @@ export class SuiPopup implements IPopup {
     @HostBinding("attr.tabindex")
     public readonly tabindex:number;
 
-    constructor(public elementRef:ElementRef) {
+    constructor(public elementRef:ElementRef,
+                private _zone:NgZone,
+                private _renderer2:Renderer2,
+                private _changeDetectorRef:ChangeDetectorRef
+    ) {
         this.transitionController = new TransitionController(false);
 
         this._isOpen = false;
@@ -144,38 +148,44 @@ export class SuiPopup implements IPopup {
         this.tabindex = 0;
     }
 
-    public open():void {
+    public open(element?:ElementRef):void {
         // Only attempt to open if currently closed.
         if (!this.isOpen) {
             // Cancel the closing timer.
             clearTimeout(this.closingTimeout);
 
-            // Create positioning service after a brief delay.
-            setTimeout(() => {
-                this.positioningService = new PositioningService(
-                    this._anchor,
-                    this._container.element,
-                    this.config.placement,
-                    ".dynamic.arrow",
-                    this.config.allowFlip
-                );
-                this.positioningService.hasArrow = !this.config.isBasic;
+            this._zone.run(() => {
+                // Cancel all other transitions, and initiate the opening transition.
+                this.transitionController.stopAll();
+                if (element) {
+                    this.transitionController.registerElement(element);
+                }
+                this.transitionController.registerChangeDetector(this._changeDetectorRef);
+                this.transitionController.registerRenderer(this._renderer2);
+                this.transitionController.animate(
+                    new Transition(this.config.transition, this.config.transitionDuration, TransitionDirection.In, () => {
+                        // Focus any element with [autofocus] attribute.
+                        const autoFocus = this.elementRef.nativeElement.querySelector("[autofocus]") as HTMLElement | null;
+                        if (autoFocus) {
+                            // Autofocus after the browser has had time to process other event handlers.
+                            setTimeout(() => autoFocus.focus(), 10);
+                            // Try to focus again when the modal has opened so that autofocus works in IE11.
+                            setTimeout(() => autoFocus.focus(), this.config.transitionDuration);
+                        }
+                    }));
             });
 
-            // Cancel all other transitions, and initiate the opening transition.
-            this.transitionController.stopAll();
-            this.transitionController.animate(
-                new Transition(this.config.transition, this.config.transitionDuration, TransitionDirection.In, () => {
-                    // Focus any element with [autofocus] attribute.
-                    const autoFocus = this.elementRef.nativeElement.querySelector("[autofocus]") as HTMLElement | null;
-                    if (autoFocus) {
-                        // Autofocus after the browser has had time to process other event handlers.
-                        setTimeout(() => autoFocus.focus(), 10);
-                        // Try to focus again when the modal has opened so that autofocus works in IE11.
-                        setTimeout(() => autoFocus.focus(), this.config.transitionDuration);
-                    }
-                }));
+            // Create positioning service after a brief delay.
+            this.positioningService = new PositioningService(
+                this._anchor,
+                this._container.element,
+                this.config.placement,
+                ".dynamic.arrow",
+                this.config.allowFlip
+            );
+            this.positioningService.hasArrow = !this.config.isBasic;
 
+            setTimeout(() => {this.positioningService.update()});
             // Finally, set the popup to be open.
             this._isOpen = true;
             this.onOpen.emit();

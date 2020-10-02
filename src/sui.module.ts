@@ -22,7 +22,8 @@ import {
     SuiSidebarModule,
     SuiTabsModule,
     SuiSelectModule,
-    SuiTransitionModule
+    SuiTransitionModule,
+    SuiDatepickerNextModule
 } from "./modules/internal";
 
 // Behaviors
@@ -57,6 +58,7 @@ import {
         SuiSidebarModule,
         SuiTabsModule,
         SuiTransitionModule,
+        SuiDatepickerNextModule,
 
         // Behaviors
         SuiLocalizationModule,
