@@ -1,20 +1,39 @@
 
-import { Directive, Host, Input, ElementRef, HostBinding, HostListener, Renderer2 } from "@angular/core";
+import { Directive, Host, Input, ElementRef, HostBinding, HostListener, Renderer2, OnInit, OnChanges } from "@angular/core";
 import { DateUtil, DatePrecision } from "../../../misc/util/internal";
 import { SuiLocalizationService } from "../../../behaviors/localization/internal";
 import { PopupTrigger } from "../../popup/internal";
 import { SuiDatepickerNextDirective, SuiDatepickerNextDirectiveValueAccessor } from "./datepicker.directive";
 import { InternalDateParser, DateParser } from "../classes/date-parser";
+import { MaskedTextChangedListener, Notation, AffinityCalculation, AffinityCalculationStrategy } from "ts-input-mask";
 import * as bowser from "bowser";
 
 import "../helpers/is-webview";
 import * as isUAWebView from "is-ua-webview";
 const isWebView = isUAWebView["default"] || isUAWebView;
 
+export class InputMaskOptions {
+    constructor(
+      public readonly affineFormats:ReadonlyArray<String> = [],
+      public readonly customNotations:ReadonlyArray<Notation> = [],
+      public readonly affinityCalculationStrategy:AffinityCalculation =
+        new AffinityCalculation(AffinityCalculationStrategy.WHOLE_STRING),
+      public readonly autocomplete:boolean = false
+    ) {}
+}
+
+const DATEPICKER_MASKS = {
+    time: "[00]{:}[00]",
+    datetime: "[00]{.}[00]{.}[0000] [00]{:}[00]",
+    date: "[00]{.}[00]{.}[0000",
+    month: "[aaaAAAAA] [0000]",
+    year: "[0000]"
+};
+
 @Directive({
     selector: "input[suiDatepickerNext]"
 })
-export class SuiDatepickerNextInputDirective {
+export class SuiDatepickerNextInputDirective implements OnInit, MaskedTextChangedListener.ValueListener {
     private _useNativeOnMobile:boolean;
 
     @Input("pickerUseNativeOnMobile")
@@ -88,6 +107,11 @@ export class SuiDatepickerNextInputDirective {
         }
     }
 
+    private _maskOptions:InputMaskOptions = new InputMaskOptions();
+    @Input("maskOptions") set maskOptions(value:InputMaskOptions) {
+        this._maskOptions = value;
+    }
+
     constructor(@Host() public datepicker:SuiDatepickerNextDirective,
                 @Host() public valueAccessor:SuiDatepickerNextDirectiveValueAccessor,
                 private _renderer:Renderer2,
@@ -98,11 +122,45 @@ export class SuiDatepickerNextInputDirective {
         this.fallbackActive = false;
 
         // Whenever the datepicker value updates, update the input text alongside it.
-        this.datepicker.onSelectedDateChange.subscribe(() =>
+        this.datepicker.onDateChange.subscribe(() =>
             this.updateValue(this.selectedDateString));
 
         localizationService.onLanguageUpdate.subscribe(() =>
             this.updateValue(this.selectedDateString));
+    }
+
+    public ngOnInit():void {
+        this.setupListener(this._element.nativeElement);
+    }
+
+    public onTextChanged(
+        maskFilled:boolean,
+        extractedValue:string,
+        formattedText:string
+    ):void {
+        this._lastUpdateTyped = true;
+        this._currentInputValue = extractedValue;
+        if (!maskFilled || !extractedValue) {
+            // Delete the selected date if no date was entered manually.
+            return this.datepicker.setSelectedDate(undefined);
+        }
+        const parsed = this.parser.parse(formattedText, this.datepicker.selectedDate);
+        if (!isNaN(parsed.getTime()) && formattedText === this.parser.format(parsed)) {
+            return this.datepicker.setSelectedDate(parsed);
+        }
+        return this.datepicker.setSelectedDate(undefined);
+    }
+
+    private setupListener(input:HTMLInputElement):void {
+        MaskedTextChangedListener.installOn(
+            DATEPICKER_MASKS[this.datepicker.mode],
+            input,
+            this,
+            this._maskOptions.affineFormats,
+            this._maskOptions.customNotations,
+            this._maskOptions.affinityCalculationStrategy,
+            this._maskOptions.autocomplete
+        );
     }
 
     private updateValue(value:string | undefined):void {
@@ -113,23 +171,6 @@ export class SuiDatepickerNextInputDirective {
         }
 
         this._lastUpdateTyped = false;
-    }
-
-    @HostListener("input", ["$event.target.value"])
-    public typeValue(value:string | undefined):void {
-        this._lastUpdateTyped = true;
-        this._currentInputValue = value;
-
-        if (!value) {
-            // Delete the selected date if no date was entered manually.
-            return this.datepicker.writeValue(undefined);
-        }
-
-        const parsed = this.parser.parse(value, this.datepicker.selectedDate);
-        if (!isNaN(parsed.getTime()) && value === this.parser.format(parsed)) {
-            return this.datepicker.writeValue(parsed);
-        }
-        return this.datepicker.writeValue(undefined);
     }
 
     @HostListener("focusout")
