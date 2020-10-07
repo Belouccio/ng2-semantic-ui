@@ -6,6 +6,10 @@ const exampleStandardTemplate = `
 <button class="ui green icon button" suiPopup popupHeader="Example" popupText="This is an example popup">
     <i class="add icon"></i>
 </button>
+
+<button *ngIf="show" class="ui green icon button" suiPopup popupHeader="Example" popupText="DESTROY" (click)="show = false">
+    <i class="add icon"></i>
+</button>
 `;
 
 const exampleTemplateTemplate = `
@@ -278,7 +282,9 @@ export class PopupExampleStandardNew {}
     template: exampleStandardTemplate,
     providers: [SuiPopupConfig]
 })
-export class PopupExampleStandard {}
+export class PopupExampleStandard {
+    public show:boolean = true;
+}
 
 @Component({
     selector: "example-popup-template",

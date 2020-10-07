@@ -185,7 +185,10 @@ export class SuiPopup implements IPopup {
             );
             this.positioningService.hasArrow = !this.config.isBasic;
 
-            setTimeout(() => {this.positioningService.update()});
+            // TODO: Fix position service and use popper 2. Don't ask what is it, it works
+            requestAnimationFrame(() => {this.positioningService.update(); });
+            setTimeout(() => {this.positioningService.update(); });
+            setTimeout(() => {this.positioningService.update(); }, 10);
             // Finally, set the popup to be open.
             this._isOpen = true;
             this.onOpen.emit();

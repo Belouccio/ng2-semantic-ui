@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, TemplateRef, Renderer2, NgZone } from "@angular/core";
+import { Directive, Input, ElementRef, TemplateRef, Renderer2, NgZone, OnDestroy } from "@angular/core";
 import { ITemplateRefContext, Util, PositioningPlacement, SuiComponentFactory } from "../../../misc/util/internal";
 import { SuiPopup } from "../components/popup";
 import { PopupConfig, PopupTrigger, PopupSize, PopupWidth } from "../classes/popup-config";
@@ -12,7 +12,7 @@ const templateRef = TemplateRef;
     selector: "[suiPopup]",
     exportAs: "suiPopup"
 })
-export class SuiPopupDirective<T> extends SuiPopupTemplateController<T> {
+export class SuiPopupDirective<T> extends SuiPopupTemplateController<T> implements OnDestroy {
     @Input()
     public set popupHeader(header:string) {
         this.popup.config.header = header;
@@ -109,5 +109,9 @@ export class SuiPopupDirective<T> extends SuiPopupTemplateController<T> {
                 zone:NgZone) {
 
         super(renderer, element, componentFactory, new PopupConfig(popupDefaults), zone);
+    }
+
+    public ngOnDestroy():void {
+        this.cleanup();
     }
 }
