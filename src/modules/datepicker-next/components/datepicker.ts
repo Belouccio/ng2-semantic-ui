@@ -1,4 +1,4 @@
-import { Component, HostBinding, HostListener } from "@angular/core";
+import { Component, HostBinding, HostListener, NgZone } from "@angular/core";
 import { CalendarService } from "./../services/calendar.service";
 import { DatetimeConfig } from "../classes/calendar-config";
 import { SuiLocalizationService } from "../../../behaviors/localization/internal";
@@ -38,8 +38,8 @@ export class SuiDatepickerNext {
 
     public service:CalendarService;
 
-    constructor(localizationService:SuiLocalizationService) {
-        this.service = new CalendarService(new DatetimeConfig(), localizationService.get().datepicker);
+    constructor(localizationService:SuiLocalizationService, private zone:NgZone) {
+        this.service = new CalendarService(new DatetimeConfig(), localizationService.get().datepicker, zone);
 
         this.hasClasses = true;
     }

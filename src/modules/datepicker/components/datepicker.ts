@@ -1,4 +1,4 @@
-import { Component, HostBinding, HostListener } from "@angular/core";
+import { Component, HostBinding, HostListener, NgZone } from "@angular/core";
 import { CalendarService } from "./../services/calendar.service";
 import { DatetimeConfig } from "../classes/calendar-config";
 import { SuiLocalizationService } from "../../../behaviors/localization/internal";
@@ -18,10 +18,10 @@ export const DatepickerMode = {
     template: `
 <ng-container [ngSwitch]="service.currentView">
     <sui-calendar-year-view [service]="service" *ngSwitchCase="0"></sui-calendar-year-view>
-    <sui-calendar-month-view [service]="service" *ngSwitchCase="1"></sui-calendar-month-view>    
-    <sui-calendar-date-view [service]="service" *ngSwitchCase="2"></sui-calendar-date-view>    
-    <sui-calendar-hour-view [service]="service" *ngSwitchCase="3"></sui-calendar-hour-view>    
-    <sui-calendar-minute-view [service]="service" *ngSwitchCase="4"></sui-calendar-minute-view>    
+    <sui-calendar-month-view [service]="service" *ngSwitchCase="1"></sui-calendar-month-view>
+    <sui-calendar-date-view [service]="service" *ngSwitchCase="2"></sui-calendar-date-view>
+    <sui-calendar-hour-view [service]="service" *ngSwitchCase="3"></sui-calendar-hour-view>
+    <sui-calendar-minute-view [service]="service" *ngSwitchCase="4"></sui-calendar-minute-view>
 </ng-container>
 `,
     styles: [`
@@ -38,8 +38,8 @@ export class SuiDatepicker {
 
     public service:CalendarService;
 
-    constructor(localizationService:SuiLocalizationService) {
-        this.service = new CalendarService(new DatetimeConfig(), localizationService.get().datepicker);
+    constructor(localizationService:SuiLocalizationService, private zone:NgZone) {
+        this.service = new CalendarService(new DatetimeConfig(), localizationService.get().datepicker, zone);
 
         this.hasClasses = true;
     }

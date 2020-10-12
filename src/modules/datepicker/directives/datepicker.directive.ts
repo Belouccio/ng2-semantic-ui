@@ -149,6 +149,10 @@ export class SuiDatepickerDirective
                 this.selectedDate = d;
                 this.close();
             });
+
+            this.componentInstance.service.onUpdateView.subscribe(() => {
+                requestAnimationFrame(() => this.popup.positioningService.update());
+            });
         }
     }
 

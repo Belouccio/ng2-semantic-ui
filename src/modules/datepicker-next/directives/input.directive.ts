@@ -23,9 +23,9 @@ export class InputMaskOptions {
 }
 
 const DATEPICKER_MASKS = {
-    time: "[00]{:}[00]",
-    datetime: "[00]{.}[00]{.}[0000] [00]{:}[00]",
-    date: "[00]{.}[00]{.}[0000]",
+    time: "[09]{:}[09]",
+    datetime: "[09]{.}[09]{.}[0000] [09]{:}[09]",
+    date: "[09]{.}[09]{.}[0000]",
     month: "[aaaAAAAA] [0000]",
     year: "[0000]"
 };

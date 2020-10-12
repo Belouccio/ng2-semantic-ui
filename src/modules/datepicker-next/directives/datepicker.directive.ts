@@ -150,6 +150,10 @@ export class SuiDatepickerNextDirective
                 this.setSelectedDate(d);
                 this.close();
             });
+
+            this.componentInstance.service.onUpdateView.subscribe(() => {
+                requestAnimationFrame(() => this.popup.positioningService.update());
+            });
         }
     }
 
