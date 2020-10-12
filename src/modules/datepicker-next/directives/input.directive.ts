@@ -142,13 +142,19 @@ export class SuiDatepickerNextInputDirective implements OnInit, MaskedTextChange
         this._currentInputValue = extractedValue;
         if (!maskFilled || !extractedValue) {
             // Delete the selected date if no date was entered manually.
-            return this.datepicker.setSelectedDate(undefined);
+            if (this.datepicker.selectedDate !== undefined) {
+                this.datepicker.setSelectedDate(undefined);
+            }
+            return;
         }
         const parsed = this.parser.parse(formattedText, this.datepicker.selectedDate);
         if (!isNaN(parsed.getTime()) && formattedText === this.parser.format(parsed)) {
             return this.datepicker.setSelectedDate(parsed);
         }
-        return this.datepicker.setSelectedDate(undefined);
+        if (this.datepicker.selectedDate !== undefined) {
+            this.datepicker.setSelectedDate(undefined);
+        }
+        return;
     }
 
     private setupListener(input:HTMLInputElement):void {
