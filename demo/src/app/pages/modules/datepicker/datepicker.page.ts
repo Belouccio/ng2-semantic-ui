@@ -11,6 +11,7 @@ const exampleStandardTemplate = `
             <input suiDatepicker
                    [(ngModel)]="date"
                    [pickerMode]="mode"
+                   pickerPlacement="bottom right"
                    [pickerFirstDayOfWeek]="firstDayOfWeek"
                    [pickerUseNativeOnMobile]="false">
         </div>
@@ -88,6 +89,8 @@ const exampleDatepickerNextTemplate = `
                    [(ngModel)]="date"
                    (pickerSelectedDateChange)="onChangeDate=$event"
                    [pickerMode]="mode"
+                   [pickerMinDate]="minDate"
+                   pickerPlacement="bottom right"
                    [pickerOnlyEmitManual]="true"
                    [pickerFirstDayOfWeek]="firstDayOfWeek"
                    [pickerUseNativeOnMobile]="false">
@@ -232,6 +235,7 @@ export class DatepickerExampleStandard {
 })
 export class DatepickerNextExampleStandard {
     public firstDayOfWeek:number = 1;
+    public minDate = new Date(2020, 9, 11);
 
     public datepickerModes:string[] = ["datetime", "date", "time", "month", "year"];
     public mode:DatepickerMode = DatepickerMode.Date;

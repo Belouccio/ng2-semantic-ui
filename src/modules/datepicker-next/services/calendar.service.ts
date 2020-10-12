@@ -1,4 +1,4 @@
-import { EventEmitter } from "@angular/core";
+import { EventEmitter, NgZone } from "@angular/core";
 import { IDatepickerLocaleValues } from "../../../behaviors/localization/internal";
 import { DateUtil } from "../../../misc/util/internal";
 import { CalendarViewType } from "../views/calendar-view";
@@ -84,8 +84,9 @@ export class CalendarService {
     }
 
     public onDateChange:EventEmitter<Date>;
+    public onUpdateView:EventEmitter<boolean>;
 
-    constructor(config:CalendarConfig, public localeValues:IDatepickerLocaleValues) {
+    constructor(config:CalendarConfig, public localeValues:IDatepickerLocaleValues, private zone:NgZone) {
         this.config = config;
 
         this.currentDate = new Date();
@@ -93,6 +94,7 @@ export class CalendarService {
         this.firstDayOfWeek = this.localeValues.firstDayOfWeek;
 
         this.onDateChange = new EventEmitter<Date>();
+        this.onUpdateView = new EventEmitter<boolean>();
 
         this.reset();
     }
@@ -140,5 +142,6 @@ export class CalendarService {
             throw new Error("Unknown view type.");
         }
         this.currentView = mapping;
+        this.onUpdateView.emit(true);
     }
 }
