@@ -122,8 +122,8 @@ export class SuiDatepickerNextInputDirective implements OnInit, MaskedTextChange
         this.fallbackActive = false;
 
         // Whenever the datepicker value updates, update the input text alongside it.
-        this.datepicker.onDateChange.subscribe(() =>
-            this.updateValue(this.selectedDateString));
+        this.datepicker.onDateChange.subscribe(({ force }) =>
+            this.updateValue(this.selectedDateString, force));
 
         localizationService.onLanguageUpdate.subscribe(() =>
             this.updateValue(this.selectedDateString));
@@ -169,10 +169,10 @@ export class SuiDatepickerNextInputDirective implements OnInit, MaskedTextChange
         );
     }
 
-    private updateValue(value:string | undefined):void {
+    private updateValue(value:string | undefined, force:boolean = false):void {
         // Only update the current value if it is different to what it's being updated to.
         // This is so that the editing position isn't changed when manually typing the date.
-        if (!this._lastUpdateTyped) {
+        if (!this._lastUpdateTyped || force) {
             this._renderer.setProperty(this._element.nativeElement, "value", value || "");
         }
 

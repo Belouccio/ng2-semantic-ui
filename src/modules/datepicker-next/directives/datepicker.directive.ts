@@ -54,7 +54,7 @@ export class SuiDatepickerNextDirective
                 this.config = new TimeConfig();
                 break;
         }
-        this.setSelectedDate(this.selectedDate);
+        this.setSelectedDate(this.selectedDate, !this.onlyEmitManual);
     }
 
     @Input("pickerInitialDate")
@@ -71,6 +71,9 @@ export class SuiDatepickerNextDirective
 
     @Input("pickerFirstDayOfWeek")
     public firstDayOfWeek?:number;
+
+    @Input("pickerForceChangeDateOverflow")
+    public forceChangeDateOverflow?:boolean;
 
     private _localeValues:IDatepickerLocaleValues;
 
@@ -99,7 +102,7 @@ export class SuiDatepickerNextDirective
     @Output("pickerSelectedDateChange")
     public onSelectedDateChange:EventEmitter<Date>;
 
-    public onDateChange:EventEmitter<Date>;
+    public onDateChange:EventEmitter<{ value:Date | undefined; force:boolean }>;
 
     @Output("pickerValidatorChange")
     public onValidatorChange:EventEmitter<void>;
@@ -125,7 +128,7 @@ export class SuiDatepickerNextDirective
         this.localizationService.onLanguageUpdate.subscribe(() => this.onLocaleUpdate());
 
         this.onSelectedDateChange = new EventEmitter<Date>();
-        this.onDateChange = new EventEmitter<Date>();
+        this.onDateChange = new EventEmitter<{ value:Date | undefined; force:boolean }>();
         this.onValidatorChange = new EventEmitter<void>();
 
         this.mode = DatepickerMode.Datetime;
@@ -186,15 +189,38 @@ export class SuiDatepickerNextDirective
         return null;
     }
 
-    public setSelectedDate(value:Date | undefined, emitValue:boolean = true):void {
+    private getValidValue(value:Date | undefined):Date | undefined {
+        if (!value) {
+            return;
+        }
+
+        let val = value.getTime();
+        if (this.minDate) {
+            val = Math.max(val, this.minDate.getTime());
+        }
+        if (this.maxDate) {
+            val = Math.min(val, this.maxDate.getTime());
+        }
+
+        return new Date(val);
+    }
+
+    public setSelectedDate(val:Date | undefined, emitValue:boolean = true):void {
+        const value = this.forceChangeDateOverflow ? this.getValidValue(val) : val;
         this._selectedDate = value;
-        this.onDateChange.emit(value);
+        this.onDateChange.emit({ value, force: !!this.forceChangeDateOverflow && value !== val });
+
+        if (this.componentInstance) {
+            this.componentInstance.service.selectedDate = value;
+        }
+
         if (emitValue) {
             this.onSelectedDateChange.emit(value);
         }
     }
 
-    public writeValue(value:Date | undefined):void {
+    public writeValue(val:Date | undefined):void {
+        const value = this.forceChangeDateOverflow ? this.getValidValue(val) : val;
         this.setSelectedDate(value, !this.onlyEmitManual);
 
         if (this.componentInstance) {
