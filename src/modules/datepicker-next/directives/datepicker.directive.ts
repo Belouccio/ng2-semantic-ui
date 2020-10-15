@@ -189,6 +189,16 @@ export class SuiDatepickerNextDirective
         return null;
     }
 
+    public isValidDate(value:Date | undefined):boolean {
+        if (!value) { return true; }
+
+        if (this.minDate && value < this.minDate || this.maxDate && value > this.maxDate) {
+            return false;
+        }
+
+        return true;
+    }
+
     private getValidValue(value:Date | undefined):Date | undefined {
         if (!value) {
             return;
@@ -206,12 +216,15 @@ export class SuiDatepickerNextDirective
     }
 
     public setSelectedDate(val:Date | undefined, emitValue:boolean = true):void {
-        const value = this.forceChangeDateOverflow ? this.getValidValue(val) : val;
-        this._selectedDate = value;
-        this.onDateChange.emit({ value, force: !!this.forceChangeDateOverflow && value !== val });
+        let value = val;
+        if (this.isValidDate(val) || this.forceChangeDateOverflow) {
+            value = this.forceChangeDateOverflow ? this.getValidValue(val) : val;
+            this._selectedDate = value;
+            this.onDateChange.emit({ value, force: !!this.forceChangeDateOverflow && value !== val });
 
-        if (this.componentInstance) {
-            this.componentInstance.service.selectedDate = value;
+            if (this.componentInstance) {
+                this.componentInstance.service.selectedDate = value;
+            }
         }
 
         if (emitValue) {
@@ -223,8 +236,10 @@ export class SuiDatepickerNextDirective
         const value = this.forceChangeDateOverflow ? this.getValidValue(val) : val;
         this.setSelectedDate(value, !this.onlyEmitManual);
 
-        if (this.componentInstance) {
-            this.componentInstance.service.selectedDate = value;
+        if (this.isValidDate(val) || this.forceChangeDateOverflow) {
+            if (this.componentInstance) {
+                this.componentInstance.service.selectedDate = value;
+            }
         }
     }
 

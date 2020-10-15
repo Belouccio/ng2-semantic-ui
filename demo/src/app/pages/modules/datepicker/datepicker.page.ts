@@ -88,7 +88,6 @@ const exampleDatepickerNextTemplate = `
             <input suiDatepickerNext
                    [(ngModel)]="date"
                    (pickerSelectedDateChange)="onChangeDate=$event"
-                   [pickerForceChangeDateOverflow]="true"
                    [pickerMode]="mode"
                    [pickerMinDate]="minDate"
                    pickerPlacement="bottom right"
