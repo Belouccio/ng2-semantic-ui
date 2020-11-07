@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewContainerRef, ElementRef, EventEmitter, HostListener, HostBinding, NgZone, Renderer2, ChangeDetectorRef } from "@angular/core";
+import { Component, ViewChild, ViewContainerRef, ElementRef, EventEmitter, HostListener, HostBinding, NgZone, Renderer2, ChangeDetectorRef, OnChanges, AfterViewChecked, DoCheck } from "@angular/core";
 import { PositioningService, IDynamicClasses } from "../../../misc/util/internal";
 import { TransitionController, TransitionDirection, Transition } from "../../transition/internal";
 import { IPopup } from "../classes/popup-controller";
@@ -59,7 +59,7 @@ import { TemplatePopupConfig } from "../classes/popup-template-controller";
 }
 `]
 })
-export class SuiPopup implements IPopup {
+export class SuiPopup implements IPopup, DoCheck {
     // Config settings for this popup.
     public config:TemplatePopupConfig<any>;
 
@@ -146,6 +146,14 @@ export class SuiPopup implements IPopup {
         this.onClose = new EventEmitter<void>();
 
         this.tabindex = 0;
+    }
+
+    public ngDoCheck():void {
+        if (this.positioningService) {
+            this._zone.runOutsideAngular(() => {
+                this.positioningService.update();
+            });
+        }
     }
 
     public open(element?:ElementRef):void {

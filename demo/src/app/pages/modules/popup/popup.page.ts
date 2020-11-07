@@ -22,6 +22,19 @@ const exampleTemplateTemplate = `
 <button class="ui icon button" suiPopup [popupTemplate]="popupTemplate" popupTrigger="outsideClick">
     <i class="star icon"></i> Rate
 </button>
+
+<ng-template let-popup #popupTemplate2>
+    <div class="header">Rating</div>
+    <div class="content">
+        <sui-rating class="star" (click)="showData = true"></sui-rating>
+    </div>
+    <div class="content" *ngIf="showData">
+        <sui-rating class="star"></sui-rating>
+    </div>
+</ng-template>
+<button class="ui icon button" suiPopup popupTrigger="outsideClick" [popupTemplate]="popupTemplate2">
+    <i class="star icon"></i> Rate
+</button>
 `;
 
 const examplePlacementTemplate = `
@@ -291,7 +304,9 @@ export class PopupExampleStandard {
     template: exampleTemplateTemplate,
     providers: [SuiPopupConfig]
 })
-export class PopupExampleTemplate {}
+export class PopupExampleTemplate {
+    public showData:boolean = false;
+}
 
 @Component({
     selector: "example-popup-placement",
