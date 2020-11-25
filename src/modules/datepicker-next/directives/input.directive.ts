@@ -154,7 +154,7 @@ export class SuiDatepickerNextInputDirective implements OnInit, MaskedTextChange
         if (this.datepicker.selectedDate !== undefined) {
             this.datepicker.setSelectedDate(undefined);
         }
-        return;
+        this._lastUpdateTyped = false;
     }
 
     private setupListener(input:HTMLInputElement):void {

@@ -41,9 +41,25 @@ const exampleRadioButtonTemplate = `
                 Value: {{ '{' }} example: "object" }
             </sui-radio-button>
         </div>
+
+        <div class="field">
+            <sui-radio-button name="example2" value="hello" [(ngModel)]="tRadio">Value: "hello"</sui-radio-button>
+        </div>
+        <div class="field">
+            <sui-radio-button name="example2" value="world" [(ngModel)]="tRadio">Value: "world"</sui-radio-button>
+        </div>
+        <div class="field">
+            <sui-radio-button name="example2" value="example" [(ngModel)]="tRadio">Value: "example"</sui-radio-button>
+        </div>
+        <div class="field">
+            <sui-radio-button name="example2" [value]="{ example: 'object' }" [(ngModel)]="tRadio">
+                Value: {{ '{' }} example: "object" }
+            </sui-radio-button>
+        </div>
     </div>
 </div>
 <p>The currently selected value is {{ eRadio | json }}</p>
+<p>The currently selected value is {{ tRadio | json }}</p>
 `;
 
 const exampleStyledTemplate = `
@@ -187,7 +203,8 @@ export class CheckboxExampleStandard {
     template: exampleRadioButtonTemplate
 })
 export class CheckboxExampleRadioButton {
-    public eRadio:any = "world";
+    public eRadio:any;
+    public tRadio:any;
 }
 
 @Component({
