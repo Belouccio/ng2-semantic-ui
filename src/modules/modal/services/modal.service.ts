@@ -10,6 +10,7 @@ export class SuiModalService {
     constructor(private _componentFactory:SuiComponentFactory) {}
 
     public open<T, U, V>(modal:ModalConfig<T, U, V>):ActiveModal<T, U, V> {
+        (document.activeElement as HTMLElement)?.blur?.();
         // Generate the modal component to be shown.
         const componentRef = this._componentFactory.createComponent<SuiModal<U, V>>(SuiModal);
 
