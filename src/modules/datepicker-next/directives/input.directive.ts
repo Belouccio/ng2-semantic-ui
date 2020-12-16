@@ -36,6 +36,9 @@ const DATEPICKER_MASKS = {
 export class SuiDatepickerNextInputDirective implements OnInit, MaskedTextChangedListener.ValueListener {
     private _useNativeOnMobile:boolean;
 
+    @HostBinding("attr.readonly")
+    public readonly = 'true';
+
     @Input("pickerUseNativeOnMobile")
     public get useNativeOnMobile():boolean {
         return this._useNativeOnMobile;

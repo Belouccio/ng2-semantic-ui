@@ -58,6 +58,9 @@ export class SuiDatepickerInputDirective {
         }
     }
 
+    @HostBinding("attr.readonly")
+    public readonly = 'true';
+
     @HostBinding("attr.type")
     public get type():string {
         if (this.fallbackActive) {
