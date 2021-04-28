@@ -11,7 +11,7 @@ import { ModalConfig, ModalSize } from "../classes/modal-config";
     selector: "sui-modal",
     template: `
 <!-- Page dimmer for modal background. -->
-<sui-modal-dimmer [ngClass]="{'top aligned': !isCentered}" 
+<sui-modal-dimmer [ngClass]="{'top aligned': !isCentered}"
                   [class.inverted]="isInverted"
                   [(isDimmed)]="dimBackground"
                   [transitionDuration]="transitionDuration"
@@ -269,7 +269,7 @@ export class SuiModal<T, U> implements OnInit, AfterViewInit {
 
     public onClick(e:MouseEvent):void {
         // Makes sense here, as the modal shouldn't be attached to any DOM element.
-        e.stopPropagation();
+        // e.stopPropagation();
     }
 
     // Document listener is fine here because nobody will have enough modals open.
