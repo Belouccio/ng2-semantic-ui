@@ -19,7 +19,7 @@ export class CalendarRangeYearService extends CalendarRangeService {
     <tr>
         <th colspan="3">
             <sui-calendar-view-title [ranges]="ranges" (zoomOut)="zoomOut()">
-                {{ pad(decadeStart) }} - {{ pad(decadeStart + 10) }}
+                {{ pad(decadeStart) }} - {{ pad(decadeStart + 9) }}
             </sui-calendar-view-title>
         </th>
     </tr>
