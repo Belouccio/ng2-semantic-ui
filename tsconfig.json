@@ -23,7 +23,7 @@
       "ng2-semantic-ui/*": ["dist/*"],
       "@giomamaladze/ng2-semantic-ui": ["dist"],
       "@giomamaladze/ng2-semantic-ui/locales": ["dist/locales"],
-      "@giomamaladze/ng2-semantic-ui/*": ["dist/*"],
+      "@giomamaladze/ng2-semantic-ui/*": ["dist/*"]
     }
   }
 }
