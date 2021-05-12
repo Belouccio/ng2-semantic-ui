@@ -14,7 +14,7 @@ const isWebView = isUAWebView["default"] || isUAWebView;
 
 export class InputMaskOptions {
     constructor(
-      public readonly affineFormats:ReadonlyArray<String> = [],
+      public readonly affineFormats:ReadonlyArray<string> = [],
       public readonly customNotations:ReadonlyArray<Notation> = [],
       public readonly affinityCalculationStrategy:AffinityCalculation =
         new AffinityCalculation(AffinityCalculationStrategy.WHOLE_STRING),

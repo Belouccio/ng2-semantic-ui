@@ -25,7 +25,7 @@ export class CodeblockComponent implements AfterViewInit {
             this.src = this.src.replace("\n", "");
         }
         this.languageClass[`language-${this.language}`] = true;
-        this.html = Prism.highlight(this.src || "", Prism.languages[this.language]);
+        this.html = Prism.highlight(this.src || "", Prism.languages[this.language], this.language as any);
         this._changeDetectorRef.detectChanges();
     }
 }

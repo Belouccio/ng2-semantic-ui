@@ -8,7 +8,7 @@ import { Tab } from "../classes/tab";
     template: `<ng-content></ng-content>`
 })
 export class SuiTabset implements AfterContentInit {
-    @ContentChildren(SuiTabHeader)
+    @ContentChildren(SuiTabHeader, {descendants: true})
     private _tabHeaders:QueryList<SuiTabHeader>;
 
     @ContentChildren(SuiTabContent)
@@ -37,6 +37,7 @@ export class SuiTabset implements AfterContentInit {
     constructor() {
         this.tabs = [];
         this._barrierCount = 0;
+        console.log(this);
     }
 
     public ngAfterContentInit():void {

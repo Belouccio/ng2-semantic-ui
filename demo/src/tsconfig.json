@@ -6,5 +6,9 @@
       "prismjs"
     ]
   },
-  "angularCompilerOptions": { "enableIvy": false }
+  "angularCompilerOptions": {
+      "enableIvy": true,
+        "disableTypeScriptVersionCheck": true,
+
+    }
 }
